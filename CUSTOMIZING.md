@@ -3,12 +3,12 @@
 The editable profile settings are grouped at the top of `generate_profile.py`:
 
 - `BIRTH_DATE` controls the age calculation.
-- `WEBSITE_URL` controls the website shown inside the contact section.
-- `ASCII_MAX_LINES` controls how much of the portrait is displayed. Lower it to crop more from the bottom of `ascii-art.txt`.
+- `WEBSITE_URL` controls the clickable website beneath the text panel.
+- `ASCII_MAX_LINES` controls how much of the portrait is displayed. The profile uses the first nonblank lines from `ascii-art.txt`.
 - `INFO_WIDTH` controls the width of the terminal information panel.
-- `ART_INFO_GAP` controls the spacing between the portrait and terminal information panel.
+- `THEMES` contains the dark and light GitHub color palettes used by the generated SVGs.
 
-Edit `ascii-art.txt` to replace the portrait. The generator automatically aligns the portrait and information panel, then writes a selectable text `README.md`.
+Edit `ascii-art.txt` to replace the portrait. The generator automatically aligns the portrait and information panel, then writes `dark_mode.svg`, `light_mode.svg`, and `README.md`.
 
 ## Private statistics
 
