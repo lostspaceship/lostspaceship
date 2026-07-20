@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" font-family="ConsolasFallback, Consolas, monospace" width="985px" height="455px" font-size="16px">
+<style>
+@font-face {
+src: local('Consolas'), local('Consolas Bold');
+font-family: 'ConsolasFallback';
+font-display: swap;
+-webkit-size-adjust: 109%;
+size-adjust: 109%;
+}
+.key {fill: #ffa657;}
+.value {fill: #a5d6ff;}
+.muted {fill: #616e7f;}
+text, tspan {white-space: pre;}
+</style>
+<rect width="985px" height="455px" fill="#161b22" rx="15"/>
+<text x="15" y="30" fill="#c9d1d9" class="ascii">
+<tspan x="15" y="30">            #%%%%%%%%%%</tspan>
+<tspan x="15" y="50">         #%%%@@@@@@@@@%%#%#</tspan>
+<tspan x="15" y="70">        #%@@@@@@@@%@@@@@@@%%#+</tspan>
+<tspan x="15" y="90">       #@@@@@@==*==*@@@@@@%@</tspan>
+<tspan x="15" y="110">      =*#@@@%%===::=@%@@@@%</tspan>
+<tspan x="15" y="130">      %#%@@@=#  #@@@*:@@@%</tspan>
+<tspan x="15" y="150">     =#%@@@%%@@=@@:@@@#@@@</tspan>
+<tspan x="15" y="170">     %@%@*#@@@% :%-.::-=@.</tspan>
+<tspan x="15" y="190">       =@.... #+@@+-=:=%@*:</tspan>
+<tspan x="15" y="210">         ..:--=. ...::#@+ .</tspan>
+<tspan x="15" y="230">         .=.::*@@@@@*-%-=</tspan>
+<tspan x="15" y="250">           :.-*##%*:::@*</tspan>
+<tspan x="15" y="270">           :-..    ..@@:</tspan>
+<tspan x="15" y="290">            @@@@*@@@@@@=#</tspan>
+<tspan x="15" y="310">       :.-+@..@@@@@@@@% @@@*#******=</tspan>
+<tspan x="15" y="330">     :=@@%@*   :...:- . =.@%%%%@@@@@%*=#</tspan>
+<tspan x="15" y="350">  +@%%%%##@.@%. .::. :@@=%@%@@%%@@%@@%%*</tspan>
+<tspan x="15" y="370"> **+++++*#@.@@@@@@@@@@@#*@@%@@@@@@@@@@@+</tspan>
+<tspan x="15" y="390"> **+*+*%*#% @#*####%@@+ @@%*%@@@@%%@@%%=</tspan>
+<tspan x="15" y="410"> %##*+@##@@ @%#**%@@@ =@@#%%%@%%@%@%%%@*</tspan>
+<tspan x="15" y="430"> @%#%@@@@@@ @#*%*%%% #@@%#@%#%#%%#@%%%@=</tspan>
+</text>
+<text x="430" y="30" fill="#c9d1d9">
+<tspan x="430" y="30">- FTN@CODE </tspan><tspan class="muted">---------------------------------------------</tspan>
+<tspan x="430" y="50" class="muted">. </tspan><tspan class="key">OS</tspan><tspan>:</tspan><tspan class="muted"> ......................... </tspan><tspan class="value">Windows 11, macOS, Linux</tspan>
+<tspan x="430" y="70" class="muted">. </tspan><tspan class="key">Uptime</tspan><tspan>:</tspan><tspan class="muted"> .................. </tspan><tspan class="value">21 years, 7 months, 12 days</tspan>
+<tspan x="430" y="90" class="muted">. </tspan><tspan class="key">Role</tspan><tspan>:</tspan><tspan class="muted"> ............................. </tspan><tspan class="value">Software Developer</tspan>
+<tspan x="430" y="110" class="muted">. </tspan><tspan class="key">IDE</tspan><tspan>:</tspan><tspan class="muted"> ................. </tspan><tspan class="value">VS Code, IntelliJ IDEA, PyCharm</tspan>
+<tspan x="430" y="130" class="muted">. </tspan>
+<tspan x="430" y="150" class="muted">. </tspan><tspan class="key">Languages</tspan><tspan>.</tspan><tspan class="key">Programming</tspan><tspan>:</tspan><tspan class="muted"> ............. </tspan><tspan class="value">Python, C++, Rust</tspan>
+<tspan x="430" y="170" class="muted">. </tspan><tspan class="key">Languages</tspan><tspan>.</tspan><tspan class="key">Web</tspan><tspan>:</tspan><tspan class="muted"> ............................. </tspan><tspan class="value">HTML, CSS</tspan>
+<tspan x="430" y="190" class="muted">. </tspan><tspan class="key">Languages</tspan><tspan>.</tspan><tspan class="key">Real</tspan><tspan>:</tspan><tspan class="muted"> ............. </tspan><tspan class="value">Dutch, English, Albanian</tspan>
+<tspan x="430" y="210" class="muted">. </tspan>
+<tspan x="430" y="230">- Contact </tspan><tspan class="muted">----------------------------------------------</tspan>
+<tspan x="430" y="250" class="muted">. </tspan><tspan class="key">Handle</tspan><tspan>:</tspan><tspan class="muted"> ..................................... </tspan><tspan class="value">ftn.code</tspan>
+<tspan x="430" y="270" class="muted">. </tspan><tspan class="key">Email</tspan><tspan>:</tspan><tspan class="muted"> ............................. </tspan><tspan class="value">ftncode@gmail.com</tspan>
+<tspan x="430" y="290" class="muted">. </tspan><tspan class="key">Discord</tspan><tspan>:</tspan><tspan class="muted"> ................................. </tspan><tspan class="value">999999999.6</tspan>
+<tspan x="430" y="310" class="muted">. </tspan><tspan class="key">Website</tspan><tspan>:</tspan><tspan class="muted"> ................................. </tspan><tspan class="value">www.ftn.one</tspan>
+<tspan x="430" y="330" class="muted">. </tspan>
+<tspan x="430" y="350">- GitHub Stats </tspan><tspan class="muted">-----------------------------------------</tspan>
+<tspan x="430" y="370" class="muted">. </tspan><tspan class="key">Repos</tspan><tspan>:</tspan><tspan class="muted"> .... </tspan><tspan class="value">3</tspan><tspan> {</tspan><tspan class="key">Private</tspan><tspan>: </tspan><tspan class="value">n/a</tspan><tspan>} | </tspan><tspan class="key">Stars</tspan><tspan>:</tspan><tspan class="muted"> ....... </tspan><tspan class="value">10</tspan>
+<tspan x="430" y="390" class="muted">. </tspan><tspan class="key">Commits</tspan><tspan>:</tspan><tspan class="muted"> ......... </tspan><tspan class="value">4</tspan><tspan> | </tspan><tspan class="key">Private Contribs</tspan><tspan>: </tspan><tspan class="value">76</tspan>
+<tspan x="430" y="410" class="muted">. </tspan><tspan class="key">Total Contributions</tspan><tspan>:</tspan><tspan class="muted"> .............................. </tspan><tspan class="value">81</tspan>
+<tspan x="430" y="430">github.com/lostspaceship</tspan><tspan class="muted"> - updated daily</tspan>
+</text>
+</svg>
