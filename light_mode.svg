@@ -5,7 +5,7 @@
   <style>
     .art, text { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 16px; white-space: pre; }
     .art, .text { fill: #24292f; }
-    .key { fill: #bf6700; }
+    .key { fill: #cf222e; }
     .value { fill: #0969da; }
     .muted { fill: #57606a; }
   </style>

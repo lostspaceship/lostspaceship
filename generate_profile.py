@@ -30,16 +30,16 @@ INFO_WIDTH = 56
 
 THEMES = {
     "dark": {
-        "background": "#161b22",
+        "background": "#010409",
         "text": "#c9d1d9",
-        "key": "#ffa657",
+        "key": "#cf222e",
         "value": "#a5d6ff",
         "muted": "#8b949e",
     },
     "light": {
         "background": "#f6f8fa",
         "text": "#24292f",
-        "key": "#bf6700",
+        "key": "#cf222e",
         "value": "#0969da",
         "muted": "#57606a",
     },

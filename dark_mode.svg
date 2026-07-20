@@ -5,11 +5,11 @@
   <style>
     .art, text { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 16px; white-space: pre; }
     .art, .text { fill: #c9d1d9; }
-    .key { fill: #ffa657; }
+    .key { fill: #cf222e; }
     .value { fill: #a5d6ff; }
     .muted { fill: #8b949e; }
   </style>
-  <rect width="1000" height="496" rx="12" fill="#161b22" />
+  <rect width="1000" height="496" rx="12" fill="#010409" />
   <text class="art" x="24" y="36">            #%%%%%%%%%%                 </text>
 <text class="art" x="24" y="56">         #%%%@@@@@@@@@%%#%#             </text>
 <text class="art" x="24" y="76">        #%@@@@@@@@%@@@@@@@%%#+          </text>
