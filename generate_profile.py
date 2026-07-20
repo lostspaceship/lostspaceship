@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import calendar
+import html
 import os
 from datetime import date, datetime
 from pathlib import Path
@@ -11,11 +12,38 @@ import requests
 GITHUB_USERNAME = "lostspaceship"
 BIRTH_DATE = os.getenv("PROFILE_BIRTH_DATE") or "2004-12-08"
 WEBSITE_URL = "https://www.ftn.one/"
-ASCII_STRETCH = 1.15
-INFO_WIDTH = 50
-USE_RED_HIGHLIGHT = True
 OUTPUT_FILE = Path("README.md")
 ASCII_ART_FILE = Path("ascii-art.txt")
+PROFILE_IMAGES = {
+    "dark": Path("dark_mode.svg"),
+    "light": Path("light_mode.svg"),
+}
+SVG_WIDTH = 1000
+SVG_HEIGHT = 496
+SVG_PADDING = 24
+ASCII_MAX_LINES = 21
+ASCII_X = 24
+INFO_X = 428
+FIRST_LINE_Y = 36
+LINE_HEIGHT = 20
+INFO_WIDTH = 56
+
+THEMES = {
+    "dark": {
+        "background": "#161b22",
+        "text": "#c9d1d9",
+        "key": "#ffa657",
+        "value": "#a5d6ff",
+        "muted": "#8b949e",
+    },
+    "light": {
+        "background": "#f6f8fa",
+        "text": "#24292f",
+        "key": "#bf6700",
+        "value": "#0969da",
+        "muted": "#57606a",
+    },
+}
 
 
 def access_token() -> str | None:
@@ -35,14 +63,15 @@ def github_headers() -> dict[str, str]:
 
 
 def fetch_github_stats() -> dict[str, str]:
+    # These preserve the current profile snapshot when GitHub's API is unavailable.
     stats = {
-        "public_repos": "—",
-        "private_repos": "—",
+        "public_repos": "3",
+        "private_repos": "n/a",
         "private_access": "no",
         "stars": "10",
-        "commits": "—",
-        "private_contributions": "—",
-        "contributions": "—",
+        "commits": "4",
+        "private_contributions": "76",
+        "contributions": "81",
     }
     try:
         user_response = requests.get(
@@ -145,11 +174,11 @@ def add_months(value: date, months: int) -> date:
 
 def age_text() -> str:
     if not BIRTH_DATE:
-        return "21 December · birth year needed"
+        return "birth date needed"
     try:
         born = datetime.strptime(BIRTH_DATE, "%Y-%m-%d").date()
     except ValueError:
-        return "21 December · invalid birth year"
+        return "invalid birth date"
 
     today = date.today()
     years = today.year - born.year
@@ -164,91 +193,140 @@ def age_text() -> str:
     return f"{years} years, {months} months, {days} days"
 
 
-def info_row(key: str, value: str, width: int = INFO_WIDTH) -> str:
-    prefix = f". {key}:"
-    dot_count = max(1, width - len(prefix) - len(value) - 2)
-    return f"{prefix} {'.' * dot_count} {value}"
+def profile_rows(stats: dict[str, str]) -> list[list[tuple[str, str]]]:
+    def heading(title: str) -> list[tuple[str, str]]:
+        rule_length = max(4, INFO_WIDTH - len(title) - 3)
+        return [("text", f"- {title} "), ("muted", "-" * rule_length)]
+
+    def row(key: str, value: str) -> list[tuple[str, str]]:
+        prefix_length = len(key) + 3
+        dot_count = max(2, INFO_WIDTH - prefix_length - len(value))
+        return [
+            ("muted", ". "),
+            ("key", key),
+            ("muted", ": " + "." * dot_count + " "),
+            ("value", value),
+        ]
+
+    def paired_row(
+        left_key: str, left_value: str, right_key: str, right_value: str
+    ) -> list[tuple[str, str]]:
+        return [
+            ("muted", ". "),
+            ("key", left_key),
+            ("muted", ": "),
+            ("value", left_value),
+            ("muted", "  |  "),
+            ("key", right_key),
+            ("muted", ": "),
+            ("value", right_value),
+        ]
+
+    stats_rows = [
+        paired_row("Repos.Public", stats["public_repos"], "Stars.Public", stats["stars"]),
+        row("Commits.Public.ThisYear", stats["commits"]),
+        row("Contribs.Private.ThisYear", stats["private_contributions"]),
+        row("Contribs.Total.ThisYear", stats["contributions"]),
+    ]
+    if stats["private_access"] == "yes":
+        stats_rows.insert(1, row("Repos.Private", stats["private_repos"]))
+
+    return [
+        heading("FTN@CODE"),
+        row("OS", "Windows 11, macOS, Linux"),
+        row("Uptime", age_text()),
+        row("Role", "Software Developer"),
+        row("IDE", "VS Code, IntelliJ IDEA, PyCharm"),
+        [],
+        row("Languages.Programming", "Python, C++, Rust"),
+        row("Languages.Web", "HTML, CSS"),
+        row("Languages.Real", "Dutch, English, Albanian"),
+        [],
+        heading("Contact"),
+        row("Handle", "ftn.code"),
+        row("Email", "ftncode@gmail.com"),
+        row("Discord", "999999999.6"),
+        row("Website", "www.ftn.one"),
+        [],
+        heading("GitHub Stats"),
+        *stats_rows,
+        [("muted", "github.com/lostspaceship - updated daily")],
+    ]
 
 
-def section(title: str, width: int = INFO_WIDTH) -> str:
-    prefix = f"- {title} "
-    return prefix + "-" * max(3, width - len(prefix))
-
-
-def stretch_ascii(lines: list[str], factor: float) -> tuple[list[str], int]:
+def ascii_lines() -> list[str]:
+    lines = ASCII_ART_FILE.read_text(encoding="utf-8").splitlines()
     while lines and not lines[0].strip():
         lines.pop(0)
     while lines and not lines[-1].strip():
         lines.pop()
-
-    source_width = max(len(line.rstrip()) for line in lines)
-    target_width = round(source_width * factor)
-    stretched = []
-    for line in lines:
-        padded = line.rstrip().ljust(source_width)
-        stretched.append(
-            "".join(padded[min(int(column / factor), source_width - 1)] for column in range(target_width))
-        )
-    return stretched, target_width
+    return lines[:ASCII_MAX_LINES]
 
 
-def render_readme(stats: dict[str, str]) -> str:
-    source_lines = ASCII_ART_FILE.read_text(encoding="utf-8").splitlines()
-    ascii_lines, ascii_width = stretch_ascii(source_lines, ASCII_STRETCH)
-    info_lines = [
-        section("FTN@CODE"),
-        info_row("OS", "Windows 11, macOS, Linux"),
-        info_row("Uptime", age_text()),
-        info_row("Role", "Software Developer"),
-        info_row("IDE", "VS Code, IntelliJ IDEA, PyCharm"),
-        "",
-        info_row("Languages.Programming", "Python, C++, Rust"),
-        info_row("Languages.Web", "HTML, CSS"),
-        info_row("Languages.Real", "Dutch, English, Albanian"),
-        "",
-        section("Contact"),
-        info_row("Handle", "ftn.code"),
-        info_row("Email", "ftncode@gmail.com"),
-        info_row("Discord", "999999999.6"),
-        info_row("Website", "www.ftn.one"),
-        "",
-        section("GitHub Stats"),
-        info_row("Repos.Public", stats["public_repos"]),
-        *(
-            [info_row("Repos.Private", stats["private_repos"])]
-            if stats["private_access"] == "yes"
-            else []
-        ),
-        info_row("Stars.Public", stats["stars"]),
-        info_row("Commits.Public.ThisYear", stats["commits"]),
-        info_row("Contribs.Private.ThisYear", stats["private_contributions"]),
-        info_row("Contribs.Total.ThisYear", stats["contributions"]),
-        "",
-        "github.com/lostspaceship - updated daily",
-    ]
-
-    line_count = max(len(ascii_lines), len(info_lines))
-    ascii_lines.extend([""] * (line_count - len(ascii_lines)))
-    info_lines.extend([""] * (line_count - len(info_lines)))
-    line_prefix = "- " if USE_RED_HIGHLIGHT else ""
-    profile = "\n".join(
-        f"{line_prefix}{left.rstrip():<{ascii_width}} | {right}".rstrip()
-        for left, right in zip(ascii_lines, info_lines)
+def svg_line(x: int, y: int, segments: list[tuple[str, str]]) -> str:
+    content = "".join(
+        f'<tspan class="{style}">{html.escape(value)}</tspan>'
+        for style, value in segments
     )
-    fence_language = "diff" if USE_RED_HIGHLIGHT else "text"
-    return (
-        "<!-- This README is generated by generate_profile.py. -->\n\n"
-        f"```{fence_language}\n"
-        f"{profile}\n"
-        "```\n\n"
-        f'<p align="center"><a href="{WEBSITE_URL}">{WEBSITE_URL}</a></p>\n'
+    return f'<text x="{x}" y="{y}">{content}</text>'
+
+
+def render_svg(stats: dict[str, str], theme_name: str) -> str:
+    theme = THEMES[theme_name]
+    art = ascii_lines()
+    rows = profile_rows(stats)
+    art_svg = "\n".join(
+        f'<text class="art" x="{ASCII_X}" y="{FIRST_LINE_Y + index * LINE_HEIGHT}">'
+        f"{html.escape(line)}"
+        "</text>"
+        for index, line in enumerate(art)
     )
+    info_svg = "\n".join(
+        svg_line(INFO_X, FIRST_LINE_Y + index * LINE_HEIGHT, row)
+        for index, row in enumerate(rows)
+        if row
+    )
+    return f'''<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="{SVG_WIDTH}" height="{SVG_HEIGHT}" viewBox="0 0 {SVG_WIDTH} {SVG_HEIGHT}" role="img" aria-labelledby="title description">
+  <title id="title">FTN GitHub profile</title>
+  <desc id="description">Terminal-style profile for the lostspaceship GitHub account.</desc>
+  <style>
+    .art, text {{ font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 16px; white-space: pre; }}
+    .art, .text {{ fill: {theme["text"]}; }}
+    .key {{ fill: {theme["key"]}; }}
+    .value {{ fill: {theme["value"]}; }}
+    .muted {{ fill: {theme["muted"]}; }}
+  </style>
+  <rect width="{SVG_WIDTH}" height="{SVG_HEIGHT}" rx="12" fill="{theme["background"]}" />
+  {art_svg}
+  {info_svg}
+</svg>
+'''
+
+
+def render_readme() -> str:
+    image_base_url = (
+        "https://raw.githubusercontent.com/lostspaceship/lostspaceship/main"
+    )
+    return f'''<!-- This README is generated by generate_profile.py. -->
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="{image_base_url}/dark_mode.svg">
+    <img alt="FTN's GitHub profile" src="{image_base_url}/light_mode.svg" width="100%">
+  </picture>
+</p>
+
+<p align="center"><a href="{WEBSITE_URL}">{WEBSITE_URL}</a></p>
+'''
 
 
 def main() -> None:
     stats = fetch_github_stats()
-    OUTPUT_FILE.write_text(render_readme(stats), encoding="utf-8")
-    print(f"Updated {OUTPUT_FILE} for @{GITHUB_USERNAME}")
+    for theme_name, output_file in PROFILE_IMAGES.items():
+        output_file.write_text(render_svg(stats, theme_name), encoding="utf-8")
+    OUTPUT_FILE.write_text(render_readme(), encoding="utf-8")
+    print(f"Updated {OUTPUT_FILE} and profile SVGs for @{GITHUB_USERNAME}")
 
 
 if __name__ == "__main__":

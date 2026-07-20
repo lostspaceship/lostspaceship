@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="496" viewBox="0 0 1000 496" role="img" aria-labelledby="title description">
+  <title id="title">FTN GitHub profile</title>
+  <desc id="description">Terminal-style profile for the lostspaceship GitHub account.</desc>
+  <style>
+    .art, text { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 16px; white-space: pre; }
+    .art, .text { fill: #c9d1d9; }
+    .key { fill: #ffa657; }
+    .value { fill: #a5d6ff; }
+    .muted { fill: #8b949e; }
+  </style>
+  <rect width="1000" height="496" rx="12" fill="#161b22" />
+  <text class="art" x="24" y="36">            #%%%%%%%%%%                 </text>
+<text class="art" x="24" y="56">         #%%%@@@@@@@@@%%#%#             </text>
+<text class="art" x="24" y="76">        #%@@@@@@@@%@@@@@@@%%#+          </text>
+<text class="art" x="24" y="96">       #@@@@@@==*==*@@@@@@%@            </text>
+<text class="art" x="24" y="116">      =*#@@@%%===::=@%@@@@%             </text>
+<text class="art" x="24" y="136">      %#%@@@=#  #@@@*:@@@%              </text>
+<text class="art" x="24" y="156">     =#%@@@%%@@=@@:@@@#@@@              </text>
+<text class="art" x="24" y="176">     %@%@*#@@@% :%-.::-=@.              </text>
+<text class="art" x="24" y="196">       =@.... #+@@+-=:=%@*:             </text>
+<text class="art" x="24" y="216">         ..:--=. ...::#@+ .             </text>
+<text class="art" x="24" y="236">         .=.::*@@@@@*-%-=               </text>
+<text class="art" x="24" y="256">           :.-*##%*:::@*                </text>
+<text class="art" x="24" y="276">           :-..    ..@@:                </text>
+<text class="art" x="24" y="296">            @@@@*@@@@@@=#               </text>
+<text class="art" x="24" y="316">       :.-+@..@@@@@@@@% @@@*#******=    </text>
+<text class="art" x="24" y="336">     :=@@%@*   :...:- . =.@%%%%@@@@@%*=#</text>
+<text class="art" x="24" y="356">  +@%%%%##@.@%. .::. :@@=%@%@@%%@@%@@%%*</text>
+<text class="art" x="24" y="376"> **+++++*#@.@@@@@@@@@@@#*@@%@@@@@@@@@@@+</text>
+<text class="art" x="24" y="396"> **+*+*%*#% @#*####%@@+ @@%*%@@@@%%@@%%=</text>
+<text class="art" x="24" y="416"> %##*+@##@@ @%#**%@@@ =@@#%%%@%%@%@%%%@*</text>
+<text class="art" x="24" y="436"> @%#%@@@@@@ @#*%*%%% #@@%#@%#%#%%#@%%%@=</text>
+  <text x="428" y="36"><tspan class="text">- FTN@CODE </tspan><tspan class="muted">---------------------------------------------</tspan></text>
+<text x="428" y="56"><tspan class="muted">. </tspan><tspan class="key">OS</tspan><tspan class="muted">: ........................... </tspan><tspan class="value">Windows 11, macOS, Linux</tspan></text>
+<text x="428" y="76"><tspan class="muted">. </tspan><tspan class="key">Uptime</tspan><tspan class="muted">: .................... </tspan><tspan class="value">21 years, 7 months, 12 days</tspan></text>
+<text x="428" y="96"><tspan class="muted">. </tspan><tspan class="key">Role</tspan><tspan class="muted">: ............................... </tspan><tspan class="value">Software Developer</tspan></text>
+<text x="428" y="116"><tspan class="muted">. </tspan><tspan class="key">IDE</tspan><tspan class="muted">: ................... </tspan><tspan class="value">VS Code, IntelliJ IDEA, PyCharm</tspan></text>
+<text x="428" y="156"><tspan class="muted">. </tspan><tspan class="key">Languages.Programming</tspan><tspan class="muted">: ............... </tspan><tspan class="value">Python, C++, Rust</tspan></text>
+<text x="428" y="176"><tspan class="muted">. </tspan><tspan class="key">Languages.Web</tspan><tspan class="muted">: ............................... </tspan><tspan class="value">HTML, CSS</tspan></text>
+<text x="428" y="196"><tspan class="muted">. </tspan><tspan class="key">Languages.Real</tspan><tspan class="muted">: ............... </tspan><tspan class="value">Dutch, English, Albanian</tspan></text>
+<text x="428" y="236"><tspan class="text">- Contact </tspan><tspan class="muted">----------------------------------------------</tspan></text>
+<text x="428" y="256"><tspan class="muted">. </tspan><tspan class="key">Handle</tspan><tspan class="muted">: ....................................... </tspan><tspan class="value">ftn.code</tspan></text>
+<text x="428" y="276"><tspan class="muted">. </tspan><tspan class="key">Email</tspan><tspan class="muted">: ............................... </tspan><tspan class="value">ftncode@gmail.com</tspan></text>
+<text x="428" y="296"><tspan class="muted">. </tspan><tspan class="key">Discord</tspan><tspan class="muted">: ................................... </tspan><tspan class="value">999999999.6</tspan></text>
+<text x="428" y="316"><tspan class="muted">. </tspan><tspan class="key">Website</tspan><tspan class="muted">: ................................... </tspan><tspan class="value">www.ftn.one</tspan></text>
+<text x="428" y="356"><tspan class="text">- GitHub Stats </tspan><tspan class="muted">-----------------------------------------</tspan></text>
+<text x="428" y="376"><tspan class="muted">. </tspan><tspan class="key">Repos.Public</tspan><tspan class="muted">: </tspan><tspan class="value">3</tspan><tspan class="muted">  |  </tspan><tspan class="key">Stars.Public</tspan><tspan class="muted">: </tspan><tspan class="value">10</tspan></text>
+<text x="428" y="396"><tspan class="muted">. </tspan><tspan class="key">Commits.Public.ThisYear</tspan><tspan class="muted">: ............................. </tspan><tspan class="value">4</tspan></text>
+<text x="428" y="416"><tspan class="muted">. </tspan><tspan class="key">Contribs.Private.ThisYear</tspan><tspan class="muted">: .......................... </tspan><tspan class="value">76</tspan></text>
+<text x="428" y="436"><tspan class="muted">. </tspan><tspan class="key">Contribs.Total.ThisYear</tspan><tspan class="muted">: ............................ </tspan><tspan class="value">81</tspan></text>
+<text x="428" y="456"><tspan class="muted">github.com/lostspaceship - updated daily</tspan></text>
+</svg>
