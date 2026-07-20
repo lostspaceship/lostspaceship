@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import calendar
-import html
 import os
 from datetime import date, datetime
 from pathlib import Path
@@ -11,9 +10,8 @@ import requests
 
 GITHUB_USERNAME = "lostspaceship"
 BIRTH_DATE = os.getenv("BIRTH_DATE", "")  # Set to YYYY-12-21 after the year is confirmed.
-OUTPUT_FILE = Path("profile.svg")
+OUTPUT_FILE = Path("README.md")
 ASCII_ART_FILE = Path("ascii-art.txt")
-INFO_X = 475
 
 
 def github_headers() -> dict[str, str]:
@@ -125,82 +123,64 @@ def age_text() -> str:
     return f"{years} years, {months} months, {days} days"
 
 
-def tspans_for_ascii() -> str:
-    ascii_art = ASCII_ART_FILE.read_text(encoding="utf-8").strip("\r\n")
-    lines = []
-    for index, line in enumerate(ascii_art.splitlines()):
-        y = 31 + index * 20
-        lines.append(f'<tspan x="14" y="{y:g}">{html.escape(line)}</tspan>')
-    return "\n    ".join(lines)
+def info_row(key: str, value: str, width: int = 57) -> str:
+    prefix = f". {key}:"
+    dot_count = max(1, width - len(prefix) - len(value) - 2)
+    return f"{prefix} {'.' * dot_count} {value}"
 
 
-def row(y: int, key: str, value: str) -> str:
-    return (
-        f'<tspan x="{INFO_X}" y="{y}" class="muted">. </tspan>'
-        f'<tspan class="key">{html.escape(key)}</tspan>'
-        f'<tspan class="muted">: </tspan>'
-        f'<tspan class="value">{html.escape(value)}</tspan>'
-    )
+def section(title: str, width: int = 57) -> str:
+    prefix = f"- {title} "
+    return prefix + "-" * max(3, width - len(prefix))
 
 
-def rule(y: int, title: str) -> str:
-    line = "─" * max(3, 48 - len(title))
-    return f'<tspan x="{INFO_X}" y="{y}" class="heading">- {html.escape(title)} {line}</tspan>'
-
-
-def render_svg(stats: dict[str, str]) -> str:
-    content = [
-        rule(35, "FTN@CODE"),
-        row(62, "OS", "Windows 11, macOS, Linux"),
-        row(86, "Uptime", age_text()),
-        row(110, "Role", "Software Developer"),
-        row(134, "IDE", "VS Code, IntelliJ IDEA, PyCharm"),
-        row(174, "Languages.Programming", "Python, C++, Rust"),
-        row(198, "Languages.Web", "HTML, CSS"),
-        row(222, "Languages.Real", "Dutch, English, Albanian"),
-        rule(270, "Contact"),
-        row(297, "Handle", "ftn.code"),
-        row(321, "Email", "ftncode@gmail.com"),
-        row(345, "Discord", "999999999.6"),
-        row(369, "Website", "ftn.fc.school"),
-        rule(417, "GitHub Stats"),
-        row(444, "Repos", stats["repos"]),
-        row(468, "Stars", stats["stars"]),
-        row(492, "Commits.ThisYear", stats["commits"]),
-        row(516, "Contributions.ThisYear", stats["contributions"]),
-        row(540, "Followers", stats["followers"]),
-        f'<tspan x="{INFO_X}" y="584" class="foot">github.com/lostspaceship · updated daily</tspan>',
+def render_readme(stats: dict[str, str]) -> str:
+    ascii_lines = ASCII_ART_FILE.read_text(encoding="utf-8").strip("\r\n").splitlines()
+    info_lines = [
+        section("FTN@CODE"),
+        info_row("OS", "Windows 11, macOS, Linux"),
+        info_row("Uptime", age_text()),
+        info_row("Role", "Software Developer"),
+        info_row("IDE", "VS Code, IntelliJ IDEA, PyCharm"),
+        "",
+        info_row("Languages.Programming", "Python, C++, Rust"),
+        info_row("Languages.Web", "HTML, CSS"),
+        info_row("Languages.Real", "Dutch, English, Albanian"),
+        "",
+        section("Contact"),
+        info_row("Handle", "ftn.code"),
+        info_row("Email", "ftncode@gmail.com"),
+        info_row("Discord", "999999999.6"),
+        info_row("Website", "https://ftn.fc.school"),
+        "",
+        section("GitHub Stats"),
+        info_row("Repos", stats["repos"]),
+        info_row("Stars", stats["stars"]),
+        info_row("Commits.ThisYear", stats["commits"]),
+        info_row("Contributions.ThisYear", stats["contributions"]),
+        info_row("Followers", stats["followers"]),
+        "",
+        "github.com/lostspaceship - updated daily",
     ]
-    info = "\n    ".join(content)
-    return f'''<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="610" viewBox="0 0 1000 610" role="img" aria-labelledby="title desc">
-  <title id="title">FTN GitHub profile</title>
-  <desc id="desc">Red and black terminal-style profile for lostspaceship</desc>
-  <style>
-    text {{ white-space: pre; font-family: Consolas, "Liberation Mono", monospace; }}
-    .ascii {{ fill: #ff2d2d; font-size: 16px; }}
-    .info {{ font-size: 15px; }}
-    .heading {{ fill: #ff3b3b; font-weight: 700; }}
-    .key {{ fill: #ff3b3b; font-weight: 700; }}
-    .value {{ fill: #f4f4f4; }}
-    .muted {{ fill: #707070; }}
-    .foot {{ fill: #666; font-size: 12px; }}
-  </style>
-  <rect x="2" y="2" width="996" height="606" rx="18" fill="#050505" stroke="#5f1010" stroke-width="2"/>
-  <line x1="455" y1="24" x2="455" y2="586" stroke="#361010"/>
-  <text class="ascii">
-    {tspans_for_ascii()}
-  </text>
-  <text class="info">
-    {info}
-  </text>
-</svg>
-'''
+
+    line_count = max(len(ascii_lines), len(info_lines))
+    ascii_lines.extend([""] * (line_count - len(ascii_lines)))
+    info_lines.extend([""] * (line_count - len(info_lines)))
+    profile = "\n".join(
+        f"{left.rstrip():<40} | {right}".rstrip()
+        for left, right in zip(ascii_lines, info_lines)
+    )
+    return (
+        "<!-- This README is generated by generate_profile.py. -->\n\n"
+        "```text\n"
+        f"{profile}\n"
+        "```\n"
+    )
 
 
 def main() -> None:
     stats = fetch_github_stats()
-    OUTPUT_FILE.write_text(render_svg(stats), encoding="utf-8")
+    OUTPUT_FILE.write_text(render_readme(stats), encoding="utf-8")
     print(f"Updated {OUTPUT_FILE} for @{GITHUB_USERNAME}")
 
 
