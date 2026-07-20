@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import calendar
+import hashlib
 import html
 import os
 from datetime import date, datetime
@@ -37,11 +38,11 @@ THEMES = {
         "muted": "#8b949e",
     },
     "light": {
-        "background": "#f6f8fa",
-        "text": "#24292f",
+        "background": "#010409",
+        "text": "#c9d1d9",
         "key": "#cf222e",
-        "value": "#0969da",
-        "muted": "#57606a",
+        "value": "#a5d6ff",
+        "muted": "#8b949e",
     },
 }
 
@@ -304,7 +305,7 @@ def render_svg(stats: dict[str, str], theme_name: str) -> str:
 '''
 
 
-def render_readme() -> str:
+def render_readme(asset_version: str) -> str:
     image_base_url = (
         "https://raw.githubusercontent.com/lostspaceship/lostspaceship/main"
     )
@@ -312,8 +313,8 @@ def render_readme() -> str:
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="{image_base_url}/dark_mode.svg">
-    <img alt="FTN's GitHub profile" src="{image_base_url}/light_mode.svg" width="100%">
+    <source media="(prefers-color-scheme: dark)" srcset="{image_base_url}/dark_mode.svg?v={asset_version}">
+    <img alt="FTN's GitHub profile" src="{image_base_url}/light_mode.svg?v={asset_version}" width="100%">
   </picture>
 </p>
 
@@ -323,9 +324,15 @@ def render_readme() -> str:
 
 def main() -> None:
     stats = fetch_github_stats()
+    rendered_images = {
+        theme_name: render_svg(stats, theme_name) for theme_name in PROFILE_IMAGES
+    }
     for theme_name, output_file in PROFILE_IMAGES.items():
-        output_file.write_text(render_svg(stats, theme_name), encoding="utf-8")
-    OUTPUT_FILE.write_text(render_readme(), encoding="utf-8")
+        output_file.write_text(rendered_images[theme_name], encoding="utf-8")
+    asset_version = hashlib.sha256(
+        "".join(rendered_images.values()).encode("utf-8")
+    ).hexdigest()[:12]
+    OUTPUT_FILE.write_text(render_readme(asset_version), encoding="utf-8")
     print(f"Updated {OUTPUT_FILE} and profile SVGs for @{GITHUB_USERNAME}")
 
 
