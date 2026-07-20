@@ -3,9 +3,7 @@ from __future__ import annotations
 import calendar
 import os
 from datetime import date, datetime
-from html import escape
 from pathlib import Path
-from typing import Optional
 
 import requests
 
@@ -15,43 +13,13 @@ BIRTH_DATE = os.getenv("PROFILE_BIRTH_DATE") or "2004-12-08"
 WEBSITE_URL = "https://www.ftn.one/"
 
 OUTPUT_FILE = Path("README.md")
-DARK_SVG_FILE = Path("dark_mode.svg")
-LIGHT_SVG_FILE = Path("light_mode.svg")
 ASCII_ART_FILE = Path("ascii-art.txt")
 
 PROFILE_REPOSITORY = f"{GITHUB_USERNAME}/{GITHUB_USERNAME}"
-PROFILE_URL = f"https://github.com/{PROFILE_REPOSITORY}"
-RAW_ASSET_URL = f"https://raw.githubusercontent.com/{PROFILE_REPOSITORY}/main"
 
-SVG_WIDTH = 985
-FONT_SIZE = 16
-LINE_HEIGHT = 20
-START_Y = 30
-BOTTOM_PADDING = 25
-ART_X = 15
 ASCII_MAX_LINES = 21
-INFO_X = 430
 INFO_WIDTH = 56
-
-THEMES = {
-    "dark": {
-        "background": "#161b22",
-        "text": "#c9d1d9",
-        "key": "#ffa657",
-        "value": "#a5d6ff",
-        "muted": "#616e7f",
-    },
-    "light": {
-        "background": "#f6f8fa",
-        "text": "#24292f",
-        "key": "#bf6700",
-        "value": "#0969da",
-        "muted": "#57606a",
-    },
-}
-
-TextChunk = tuple[Optional[str], str]
-TextRow = list[TextChunk]
+ART_INFO_GAP = 4
 
 
 def access_token() -> str | None:
@@ -204,30 +172,20 @@ def dot_count(prefix: str, value: str, width: int = INFO_WIDTH) -> int:
     return max(2, width - len(prefix) - len(value) - 2)
 
 
-def key_chunks(key: str) -> TextRow:
-    chunks: TextRow = []
-    parts = key.split(".")
-    for index, part in enumerate(parts):
-        chunks.append(("key", part))
-        if index < len(parts) - 1:
-            chunks.append((None, "."))
-    return chunks
-
-
-def info_row(key: str, value: str, width: int = INFO_WIDTH) -> TextRow:
+def info_row(key: str, value: str, width: int = INFO_WIDTH) -> str:
     prefix = f". {key}:"
     dots = "." * dot_count(prefix, value, width)
-    return [("muted", ". "), *key_chunks(key), (None, ":"), ("muted", f" {dots} "), ("value", value)]
+    return f"{prefix} {dots} {value}"
 
 
-def section_row(title: str, width: int = INFO_WIDTH) -> TextRow:
+def section_row(title: str, width: int = INFO_WIDTH) -> str:
     prefix = f"- {title} "
     rule = "-" * max(3, width - len(prefix))
-    return [(None, prefix), ("muted", rule)]
+    return f"{prefix}{rule}"
 
 
-def blank_row() -> TextRow:
-    return [("muted", ". ")]
+def blank_row() -> str:
+    return "."
 
 
 def ascii_lines() -> list[str]:
@@ -239,42 +197,21 @@ def ascii_lines() -> list[str]:
     return [line.rstrip() for line in lines[:ASCII_MAX_LINES]]
 
 
-def stats_overview_row(stats: dict[str, str]) -> TextRow:
-    private_label = "Private" if stats["private_access"] == "yes" else "Private"
-    private_value = stats["private_repos"]
-    return [
-        ("muted", ". "),
-        ("key", "Repos"),
-        (None, ":"),
-        ("muted", " .... "),
-        ("value", stats["public_repos"]),
-        (None, " {"),
-        ("key", private_label),
-        (None, ": "),
-        ("value", private_value),
-        (None, "} | "),
-        ("key", "Stars"),
-        (None, ":"),
-        ("muted", " ....... "),
-        ("value", stats["stars"]),
-    ]
+def stats_overview_row(stats: dict[str, str]) -> str:
+    return (
+        f". Repos: .... {stats['public_repos']} "
+        f"{{Private: {stats['private_repos']}}} | Stars: ....... {stats['stars']}"
+    )
 
 
-def stats_activity_row(stats: dict[str, str]) -> TextRow:
-    return [
-        ("muted", ". "),
-        ("key", "Commits"),
-        (None, ":"),
-        ("muted", " ......... "),
-        ("value", stats["commits"]),
-        (None, " | "),
-        ("key", "Private Contribs"),
-        (None, ": "),
-        ("value", stats["private_contributions"]),
-    ]
+def stats_activity_row(stats: dict[str, str]) -> str:
+    return (
+        f". Commits: ......... {stats['commits']} "
+        f"| Private Contribs: {stats['private_contributions']}"
+    )
 
 
-def profile_rows(stats: dict[str, str]) -> list[TextRow]:
+def profile_rows(stats: dict[str, str]) -> list[str]:
     return [
         section_row("FTN@CODE"),
         info_row("OS", "Windows 11, macOS, Linux"),
@@ -296,106 +233,39 @@ def profile_rows(stats: dict[str, str]) -> list[TextRow]:
         stats_overview_row(stats),
         stats_activity_row(stats),
         info_row("Total Contributions", stats["contributions"]),
-        [(None, "github.com/lostspaceship"), ("muted", " - updated daily")],
+        "github.com/lostspaceship - updated daily",
     ]
 
 
-def svg_height(line_count: int) -> int:
-    return START_Y + (line_count - 1) * LINE_HEIGHT + BOTTOM_PADDING
-
-
-def svg_tspan(chunk: TextChunk, x: int | None = None, y: int | None = None) -> str:
-    class_name, text = chunk
-    attrs = []
-    if x is not None:
-        attrs.append(f'x="{x}"')
-    if y is not None:
-        attrs.append(f'y="{y}"')
-    if class_name:
-        attrs.append(f'class="{class_name}"')
-    attr_text = " " + " ".join(attrs) if attrs else ""
-    return f"<tspan{attr_text}>{escape(text)}</tspan>"
-
-
-def render_text_rows(rows: list[TextRow], x: int, fill: str) -> str:
-    output = [f'<text x="{x}" y="{START_Y}" fill="{fill}">']
-    for index, row in enumerate(rows):
-        y = START_Y + index * LINE_HEIGHT
-        first, *rest = row
-        output.append(svg_tspan(first, x=x, y=y) + "".join(svg_tspan(chunk) for chunk in rest))
-    output.append("</text>")
-    return "\n".join(output)
-
-
-def render_ascii_rows(rows: list[str], x: int, fill: str) -> str:
-    output = [f'<text x="{x}" y="{START_Y}" fill="{fill}" class="ascii">']
-    for index, row in enumerate(rows):
-        y = START_Y + index * LINE_HEIGHT
-        output.append(f'<tspan x="{x}" y="{y}">{escape(row)}</tspan>')
-    output.append("</text>")
-    return "\n".join(output)
-
-
-def render_svg(theme_name: str, stats: dict[str, str]) -> str:
-    theme = THEMES[theme_name]
+def render_profile_text(stats: dict[str, str]) -> str:
     art = ascii_lines()
     info = profile_rows(stats)
+    art_width = max(len(line) for line in art)
     line_count = max(len(art), len(info))
     art.extend([""] * (line_count - len(art)))
-    height = svg_height(line_count)
-
+    info.extend([""] * (line_count - len(info)))
+    gap = " " * ART_INFO_GAP
     return "\n".join(
-        [
-            "<?xml version='1.0' encoding='UTF-8'?>",
-            (
-                '<svg xmlns="http://www.w3.org/2000/svg" '
-                'font-family="ConsolasFallback, Consolas, monospace" '
-                f'width="{SVG_WIDTH}px" height="{height}px" font-size="{FONT_SIZE}px">'
-            ),
-            "<style>",
-            "@font-face {",
-            "src: local('Consolas'), local('Consolas Bold');",
-            "font-family: 'ConsolasFallback';",
-            "font-display: swap;",
-            "-webkit-size-adjust: 109%;",
-            "size-adjust: 109%;",
-            "}",
-            f".key {{fill: {theme['key']};}}",
-            f".value {{fill: {theme['value']};}}",
-            f".muted {{fill: {theme['muted']};}}",
-            "text, tspan {white-space: pre;}",
-            "</style>",
-            (
-                f'<rect width="{SVG_WIDTH}px" height="{height}px" '
-                f'fill="{theme["background"]}" rx="15"/>'
-            ),
-            render_ascii_rows(art, ART_X, theme["text"]),
-            render_text_rows(info, INFO_X, theme["text"]),
-            "</svg>",
-        ]
+        f"{left:<{art_width}}{gap}{right}".rstrip()
+        for left, right in zip(art, info)
     )
 
 
-def render_readme() -> str:
-    dark_url = f"{RAW_ASSET_URL}/{DARK_SVG_FILE.name}"
-    light_url = f"{RAW_ASSET_URL}/{LIGHT_SVG_FILE.name}"
+def render_readme(stats: dict[str, str]) -> str:
+    profile = render_profile_text(stats)
     return (
         "<!-- This README is generated by generate_profile.py. -->\n\n"
-        f'<a href="{PROFILE_URL}">\n'
-        "  <picture>\n"
-        f'    <source media="(prefers-color-scheme: dark)" srcset="{dark_url}">\n'
-        f'    <img alt="FTN GitHub profile README" src="{light_url}">\n'
-        "  </picture>\n"
-        "</a>\n"
+        "```text\n"
+        f"{profile}\n"
+        "```\n\n"
+        f'<p align="center"><a href="{WEBSITE_URL}">{WEBSITE_URL}</a></p>\n'
     )
 
 
 def main() -> None:
     stats = fetch_github_stats()
-    DARK_SVG_FILE.write_text(render_svg("dark", stats), encoding="utf-8")
-    LIGHT_SVG_FILE.write_text(render_svg("light", stats), encoding="utf-8")
-    OUTPUT_FILE.write_text(render_readme(), encoding="utf-8")
-    print(f"Updated {OUTPUT_FILE}, {DARK_SVG_FILE}, and {LIGHT_SVG_FILE} for @{GITHUB_USERNAME}")
+    OUTPUT_FILE.write_text(render_readme(stats), encoding="utf-8")
+    print(f"Updated {OUTPUT_FILE} for @{GITHUB_USERNAME}")
 
 
 if __name__ == "__main__":

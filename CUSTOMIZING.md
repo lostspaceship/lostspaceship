@@ -6,9 +6,9 @@ The editable profile settings are grouped at the top of `generate_profile.py`:
 - `WEBSITE_URL` controls the website shown inside the contact section.
 - `ASCII_MAX_LINES` controls how much of the portrait is displayed. Lower it to crop more from the bottom of `ascii-art.txt`.
 - `INFO_WIDTH` controls the width of the terminal information panel.
-- `THEMES` controls the dark and light SVG color palettes.
+- `ART_INFO_GAP` controls the spacing between the portrait and terminal information panel.
 
-Edit `ascii-art.txt` to replace the portrait. The generator automatically aligns the portrait and information panel, then writes `README.md`, `dark_mode.svg`, and `light_mode.svg`.
+Edit `ascii-art.txt` to replace the portrait. The generator automatically aligns the portrait and information panel, then writes a selectable text `README.md`.
 
 ## Private statistics
 
