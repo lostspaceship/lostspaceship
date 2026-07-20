@@ -6,9 +6,8 @@ The editable profile settings are grouped at the top of `generate_profile.py`:
 - `WEBSITE_URL` controls the clickable website beneath the text panel.
 - `ASCII_MAX_LINES` controls how much of the portrait is displayed. The profile uses the first nonblank lines from `ascii-art.txt`.
 - `INFO_WIDTH` controls the width of the terminal information panel.
-- `THEMES` contains the dark and light GitHub color palettes used by the generated SVGs.
 
-Edit `ascii-art.txt` to replace the portrait. The generator automatically aligns the portrait and information panel, then writes `dark_mode.svg`, `light_mode.svg`, and `README.md`.
+Edit `ascii-art.txt` to replace the portrait. The generator automatically aligns the portrait and information panel, then writes `README.md`.
 
 ## Private statistics
 

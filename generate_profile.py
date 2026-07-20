@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import calendar
-import hashlib
-import html
 import os
 from datetime import date, datetime
 from pathlib import Path
@@ -15,36 +13,8 @@ BIRTH_DATE = os.getenv("PROFILE_BIRTH_DATE") or "2004-12-08"
 WEBSITE_URL = "https://www.ftn.one/"
 OUTPUT_FILE = Path("README.md")
 ASCII_ART_FILE = Path("ascii-art.txt")
-PROFILE_IMAGES = {
-    "dark": Path("dark_mode.svg"),
-    "light": Path("light_mode.svg"),
-}
-SVG_WIDTH = 1000
-SVG_HEIGHT = 496
-SVG_PADDING = 24
-ASCII_MAX_LINES = 21
-ASCII_X = 24
-INFO_X = 428
-FIRST_LINE_Y = 36
-LINE_HEIGHT = 20
-INFO_WIDTH = 56
-
-THEMES = {
-    "dark": {
-        "background": "#010409",
-        "text": "#c9d1d9",
-        "key": "#cf222e",
-        "value": "#a5d6ff",
-        "muted": "#8b949e",
-    },
-    "light": {
-        "background": "#010409",
-        "text": "#c9d1d9",
-        "key": "#cf222e",
-        "value": "#a5d6ff",
-        "muted": "#8b949e",
-    },
-}
+ASCII_MAX_LINES = 22
+INFO_WIDTH = 50
 
 
 def access_token() -> str | None:
@@ -64,7 +34,6 @@ def github_headers() -> dict[str, str]:
 
 
 def fetch_github_stats() -> dict[str, str]:
-    # These preserve the current profile snapshot when GitHub's API is unavailable.
     stats = {
         "public_repos": "3",
         "private_repos": "n/a",
@@ -194,65 +163,15 @@ def age_text() -> str:
     return f"{years} years, {months} months, {days} days"
 
 
-def profile_rows(stats: dict[str, str]) -> list[list[tuple[str, str]]]:
-    def heading(title: str) -> list[tuple[str, str]]:
-        rule_length = max(4, INFO_WIDTH - len(title) - 3)
-        return [("text", f"- {title} "), ("muted", "-" * rule_length)]
+def info_row(key: str, value: str, width: int = INFO_WIDTH) -> str:
+    prefix = f". {key}:"
+    dot_count = max(2, width - len(prefix) - len(value) - 2)
+    return f"{prefix} {'.' * dot_count} {value}"
 
-    def row(key: str, value: str) -> list[tuple[str, str]]:
-        prefix_length = len(key) + 3
-        dot_count = max(2, INFO_WIDTH - prefix_length - len(value))
-        return [
-            ("muted", ". "),
-            ("key", key),
-            ("muted", ": " + "." * dot_count + " "),
-            ("value", value),
-        ]
 
-    def paired_row(
-        left_key: str, left_value: str, right_key: str, right_value: str
-    ) -> list[tuple[str, str]]:
-        return [
-            ("muted", ". "),
-            ("key", left_key),
-            ("muted", ": "),
-            ("value", left_value),
-            ("muted", "  |  "),
-            ("key", right_key),
-            ("muted", ": "),
-            ("value", right_value),
-        ]
-
-    stats_rows = [
-        paired_row("Repos.Public", stats["public_repos"], "Stars.Public", stats["stars"]),
-        row("Commits.Public.ThisYear", stats["commits"]),
-        row("Contribs.Private.ThisYear", stats["private_contributions"]),
-        row("Contribs.Total.ThisYear", stats["contributions"]),
-    ]
-    if stats["private_access"] == "yes":
-        stats_rows.insert(1, row("Repos.Private", stats["private_repos"]))
-
-    return [
-        heading("FTN@CODE"),
-        row("OS", "Windows 11, macOS, Linux"),
-        row("Uptime", age_text()),
-        row("Role", "Software Developer"),
-        row("IDE", "VS Code, IntelliJ IDEA, PyCharm"),
-        [],
-        row("Languages.Programming", "Python, C++, Rust"),
-        row("Languages.Web", "HTML, CSS"),
-        row("Languages.Real", "Dutch, English, Albanian"),
-        [],
-        heading("Contact"),
-        row("Handle", "ftn.code"),
-        row("Email", "ftncode@gmail.com"),
-        row("Discord", "999999999.6"),
-        row("Website", "www.ftn.one"),
-        [],
-        heading("GitHub Stats"),
-        *stats_rows,
-        [("muted", "github.com/lostspaceship - updated daily")],
-    ]
+def section(title: str, width: int = INFO_WIDTH) -> str:
+    prefix = f"- {title} "
+    return prefix + "-" * max(3, width - len(prefix))
 
 
 def ascii_lines() -> list[str]:
@@ -264,76 +183,62 @@ def ascii_lines() -> list[str]:
     return lines[:ASCII_MAX_LINES]
 
 
-def svg_line(x: int, y: int, segments: list[tuple[str, str]]) -> str:
-    content = "".join(
-        f'<tspan class="{style}">{html.escape(value)}</tspan>'
-        for style, value in segments
-    )
-    return f'<text x="{x}" y="{y}">{content}</text>'
+def profile_rows(stats: dict[str, str]) -> list[str]:
+    stats_rows = [
+        f". Repos.Public: {stats['public_repos']}  |  Stars.Public: {stats['stars']}",
+        info_row("Commits.Public.ThisYear", stats["commits"]),
+        info_row("Contribs.Private.ThisYear", stats["private_contributions"]),
+        info_row("Contribs.Total.ThisYear", stats["contributions"]),
+    ]
+    if stats["private_access"] == "yes":
+        stats_rows.insert(1, info_row("Repos.Private", stats["private_repos"]))
+
+    return [
+        section("FTN@CODE"),
+        info_row("OS", "Windows 11, macOS, Linux"),
+        info_row("Uptime", age_text()),
+        info_row("Role", "Software Developer"),
+        info_row("IDE", "VS Code, IntelliJ IDEA, PyCharm"),
+        "",
+        info_row("Languages.Programming", "Python, C++, Rust"),
+        info_row("Languages.Web", "HTML, CSS"),
+        info_row("Languages.Real", "Dutch, English, Albanian"),
+        "",
+        section("Contact"),
+        info_row("Handle", "ftn.code"),
+        info_row("Email", "ftncode@gmail.com"),
+        info_row("Discord", "999999999.6"),
+        info_row("Website", "www.ftn.one"),
+        "",
+        section("GitHub Stats"),
+        *stats_rows,
+        "github.com/lostspaceship - updated daily",
+    ]
 
 
-def render_svg(stats: dict[str, str], theme_name: str) -> str:
-    theme = THEMES[theme_name]
+def render_readme(stats: dict[str, str]) -> str:
     art = ascii_lines()
-    rows = profile_rows(stats)
-    art_svg = "\n".join(
-        f'<text class="art" x="{ASCII_X}" y="{FIRST_LINE_Y + index * LINE_HEIGHT}">'
-        f"{html.escape(line)}"
-        "</text>"
-        for index, line in enumerate(art)
+    info = profile_rows(stats)
+    art_width = max(len(line.rstrip()) for line in art)
+    line_count = max(len(art), len(info))
+    art.extend([""] * (line_count - len(art)))
+    info.extend([""] * (line_count - len(info)))
+    profile = "\n".join(
+        f"- {left.rstrip():<{art_width}} | {right}".rstrip()
+        for left, right in zip(art, info)
     )
-    info_svg = "\n".join(
-        svg_line(INFO_X, FIRST_LINE_Y + index * LINE_HEIGHT, row)
-        for index, row in enumerate(rows)
-        if row
+    return (
+        "<!-- This README is generated by generate_profile.py. -->\n\n"
+        "```diff\n"
+        f"{profile}\n"
+        "```\n\n"
+        f'<p align="center"><a href="{WEBSITE_URL}">{WEBSITE_URL}</a></p>\n'
     )
-    return f'''<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="{SVG_WIDTH}" height="{SVG_HEIGHT}" viewBox="0 0 {SVG_WIDTH} {SVG_HEIGHT}" role="img" aria-labelledby="title description">
-  <title id="title">FTN GitHub profile</title>
-  <desc id="description">Terminal-style profile for the lostspaceship GitHub account.</desc>
-  <style>
-    .art, text {{ font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 16px; white-space: pre; }}
-    .art, .text {{ fill: {theme["text"]}; }}
-    .key {{ fill: {theme["key"]}; }}
-    .value {{ fill: {theme["value"]}; }}
-    .muted {{ fill: {theme["muted"]}; }}
-  </style>
-  <rect width="{SVG_WIDTH}" height="{SVG_HEIGHT}" rx="12" fill="{theme["background"]}" />
-  {art_svg}
-  {info_svg}
-</svg>
-'''
-
-
-def render_readme(asset_version: str) -> str:
-    image_base_url = (
-        "https://raw.githubusercontent.com/lostspaceship/lostspaceship/main"
-    )
-    return f'''<!-- This README is generated by generate_profile.py. -->
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="{image_base_url}/dark_mode.svg?v={asset_version}">
-    <img alt="FTN's GitHub profile" src="{image_base_url}/light_mode.svg?v={asset_version}" width="100%">
-  </picture>
-</p>
-
-<p align="center"><a href="{WEBSITE_URL}">{WEBSITE_URL}</a></p>
-'''
 
 
 def main() -> None:
-    stats = fetch_github_stats()
-    rendered_images = {
-        theme_name: render_svg(stats, theme_name) for theme_name in PROFILE_IMAGES
-    }
-    for theme_name, output_file in PROFILE_IMAGES.items():
-        output_file.write_text(rendered_images[theme_name], encoding="utf-8")
-    asset_version = hashlib.sha256(
-        "".join(rendered_images.values()).encode("utf-8")
-    ).hexdigest()[:12]
-    OUTPUT_FILE.write_text(render_readme(asset_version), encoding="utf-8")
-    print(f"Updated {OUTPUT_FILE} and profile SVGs for @{GITHUB_USERNAME}")
+    OUTPUT_FILE.write_text(render_readme(fetch_github_stats()), encoding="utf-8")
+    print(f"Updated {OUTPUT_FILE} for @{GITHUB_USERNAME}")
 
 
 if __name__ == "__main__":
