@@ -26,8 +26,8 @@ jobs:
 
       - name: Generate profile README
         env:
+          PROFILE_STATS_TOKEN: ${{ secrets.PROFILE_STATS_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BIRTH_DATE: ${{ vars.BIRTH_DATE }}
         run: python generate_profile.py
 
       - name: Commit updated statistics
