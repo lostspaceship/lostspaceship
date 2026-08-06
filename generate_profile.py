@@ -246,12 +246,11 @@ def profile_rows(stats: dict[str, str]) -> list[list[tuple[str, str]]]:
         heading("Contact"),
         row("Handle", "ftn.code"),
         row("Email", "ftncode@gmail.com"),
-        row("Discord", "999999999.6"),
+        row("Discord", "angelofdarkness08"),
         row("Website", "www.ftn.one"),
         [],
         heading("GitHub Stats"),
         *stats_rows,
-        [("muted", "github.com/lostspaceship - updated daily")],
     ]
 
 
