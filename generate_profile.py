@@ -233,11 +233,10 @@ def profile_rows(stats: dict[str, str]) -> list[list[tuple[str, str]]]:
 
     return [
         heading("FTN@CODE"),
-        row("OS", "Windows 11, macOS, Linux"),
+        row("OS", "Windows 10, macOS, Linux"),
         row("Uptime", age_text()),
         row("Role", "Software Developer"),
         row("IDE", "VS Code, IntelliJ IDEA, PyCharm"),
-        [],
         row("Languages.Programming", "Python, C++, Rust"),
         row("Languages.Web", "HTML, CSS"),
         row("Languages.Real", "Dutch, English, Albanian"),
