@@ -12,7 +12,6 @@ import requests
 
 GITHUB_USERNAME = "lostspaceship"
 BIRTH_DATE = os.getenv("PROFILE_BIRTH_DATE") or "2004-12-08"
-WEBSITE_URL = "https://www.ftn.one/"
 OUTPUT_FILE = Path("README.md")
 ASCII_ART_FILE = Path("ascii-art.txt")
 PROFILE_IMAGES = {
@@ -316,8 +315,6 @@ def render_readme(asset_version: str) -> str:
     <img alt="FTN's GitHub profile" src="{image_base_url}/light_mode.svg?v={asset_version}" width="100%">
   </picture>
 </p>
-
-<p align="center"><a href="{WEBSITE_URL}">{WEBSITE_URL}</a></p>
 '''
 
 
