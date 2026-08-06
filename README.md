@@ -7,4 +7,3 @@
   </picture>
 </p>
 
-<p align="center"><a href="https://www.ftn.one/">https://www.ftn.one/</a></p>
