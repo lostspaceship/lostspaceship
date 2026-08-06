@@ -19,7 +19,7 @@ PROFILE_IMAGES = {
     "light": Path("light_mode.svg"),
 }
 SVG_WIDTH = 1000
-SVG_HEIGHT = 496
+SVG_HEIGHT = 466
 SVG_PADDING = 24
 ASCII_MAX_LINES = 21
 ASCII_X = 24
